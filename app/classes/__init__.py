@@ -1,3 +1,2 @@
-from .juego import Juego
-from .train import Train
-from .rana import Rana
+from .vertice import Vertice, TipoVertice
+from .tablero import Tablero
