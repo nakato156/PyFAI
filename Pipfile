@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 numpy = "*"
+pywin32 = "*"
 
 [dev-packages]
 pytest = "*"
