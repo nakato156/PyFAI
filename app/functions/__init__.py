@@ -1,1 +1,1 @@
-from .game_pipe import pipe_client
+from .pipe_game import pipe_client
