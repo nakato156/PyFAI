@@ -1,0 +1,1 @@
+from .game_pipe import pipe_client
