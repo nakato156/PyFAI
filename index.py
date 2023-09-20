@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-from app.functions import pipe_client
+from app.functions import pipe_cliente, sockect_servidor
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -24,6 +24,8 @@ if __name__ == '__main__':
         parser.error("Se debe especificar --host y --port para el modo socket.")
 
     if args.pipe:
-        pipe_client(args.timeout or 1)
+        pipe_cliente(args.timeout or 1)
+    elif args.socket:
+        sockect_servidor(args.host, args.port)
     else:
         print("Nothing")

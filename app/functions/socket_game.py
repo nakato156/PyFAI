@@ -1,24 +1,33 @@
 from socket import socket
-import os
+from helpers import parse_matriz
 
-def crear_sockect_cliente(ip:str, port:int):
+funciones = {
+    "exec": lambda matriz: parse_matriz(matriz)
+}
+
+def sockect_servidor(host:str, port:int):
     sock = socket()
-    sock.connect((ip, port))
+    sock.bind((host, port))
+    sock.listen(4)
+
+    con, addr = sock.accept()
 
     while True:
-        msg = input(">>> ")
+        try:
+            msg = con.recv(1024).decode().strip()
+        except Exception as e:
+            con.sendall(b"Error al decodificar informacion")
+        
         if msg in ("exit","break"):
             break
-        elif msg in ("clear","cls"):
-            os.system("clear")
-    
-        if msg.startswith("-exec"):
-            matriz = msg.split("-exec")[1]
-            res = (matriz, sock)
-        else: 
-            msg = msg if type(msg) is bytes else msg.encode()
-            sock.send(msg)
-            res = sock.recv(1024)
+
+        res = "status: ok"
+        if msg.startswith("-"):
+            verb, arg = msg.split("-")
+            res_func = funciones[verb](arg)
+            print(res_func)
+            res = "funcion completada"
+        con.sendall(res.encode())
 
     sock.close()
     print("Conexion cerrada")
