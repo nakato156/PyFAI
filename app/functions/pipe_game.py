@@ -1,7 +1,7 @@
 import time
 import win32pipe, win32file, pywintypes
 
-def pipe_client(retry_time=1.5):
+def pipe_cliente(retry_time=1.5):
     print("pipe client")
     quit = False
     pipe_name = r'\\.\pipe\Frogger'
