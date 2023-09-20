@@ -58,10 +58,39 @@ class Tablero:
             if distancia[u] != INF and distancia[u] + w < distancia[v]:
                 print('Negative-weight cycle is found!!')
                 return
+        #Esto si queremos printear
         if distancia[Final] != INF:
             camino = self.getPath(vecino, Inicio, Final)
             print(f'El camino mas corto del vertice {Inicio} al vertice {Final} es {camino}, con un peso de {distancia[Final]}.')
         else:
             print(f'No se encontro un camino desde el vertice {Inicio} al vertice {Final}.')
+        #Esto para tener los valores
+        peso_total = distancia[Final]
+        return camino, peso_total
 
+    def Floyd_Warshall(graph, inicio, final):
+        n = len(graph)
+        dist = [list(row) for row in graph]
 
+        for k in range(n):
+            for i in range(n):
+                for j in range(n):
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j])
+
+        # Verificar si hay un camino entre los vértices inicio y final
+        if dist[inicio][final] == INF:
+            return None  # No hay camino
+
+        # Reconstruir el camino
+        camino = []
+        actual = inicio
+        while actual != final:
+            camino.append(actual)
+            for vecino in range(n):
+                if vecino != actual and dist[actual][vecino] + graph[vecino][final] == dist[actual][final]:
+                    actual = vecino
+                    break
+        camino.append(final)
+        # Calcular el peso total del camino
+        peso_total = dist[inicio][final]
+        return camino, peso_total
