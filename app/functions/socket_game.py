@@ -1,5 +1,5 @@
 from socket import socket
-from helpers import parse_matriz
+from .helpers import parse_matriz
 
 funciones = {
     "exec": lambda matriz: parse_matriz(matriz)
