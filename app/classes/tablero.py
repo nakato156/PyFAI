@@ -45,28 +45,31 @@ class Tablero:
         camino.insert(0, salida)
         return camino
     
-    def bellman_ford(self, vertices, Inicio, Final, n):
-        distancia = [INF]*n
-        vecino = [-1]*n
+    def bellman_ford(self, tablero, Inicio, Final):
+        n = len(tablero)
+        distancia = [INF] * n
+        vecino = [-1] * n
         distancia[Inicio] = 0
-        for _ in range(n-1):
-            for (u, v, w) in vertices:
-                if distancia[u] != INF and distancia[u] + w < distancia[v]:
-                    distancia[v] = distancia[u] + w
-                    vecino[v] = u
-        for (u, v, w) in vertices:
-            if distancia[u] != INF and distancia[u] + w < distancia[v]:
-                print('Negative-weight cycle is found!!')
-                return
-        #Esto si queremos printear
+
+        for _ in range(n - 1):
+            for u in range(n):
+                for v in range(n):
+                    if distancia[u] != INF and distancia[u] + tablero[u][v] < distancia[v]:
+                        distancia[v] = distancia[u] + tablero[u][v]
+                        vecino[v] = u
+
+        for u in range(n):
+            for v in range(n):
+                if distancia[u] != INF and distancia[u] + tablero[u][v] < distancia[v]:
+                    print('Negative-weight cycle is found!!')
+                    return
+
         if distancia[Final] != INF:
-            camino = self.getPath(vecino, Inicio, Final)
-            print(f'El camino mas corto del vertice {Inicio} al vertice {Final} es {camino}, con un peso de {distancia[Final]}.')
+            camino = self.get_path(vecino, Inicio, Final)
+            peso_total = distancia[Final]
+            return camino, peso_total
         else:
-            print(f'No se encontro un camino desde el vertice {Inicio} al vertice {Final}.')
-        #Esto para tener los valores
-        peso_total = distancia[Final]
-        return camino, peso_total
+            return None
 
     def Floyd_Warshall(graph, inicio, final):
         n = len(graph)
