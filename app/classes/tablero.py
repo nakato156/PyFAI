@@ -36,7 +36,7 @@ class Tablero:
     def __str__(self):
         return f"({self.filas}x{self.columnas})\n{[fila for fila in self.tablero]}"
     
-    def getPath(vecino, salida, llegada):
+    def getPath(self, vecino, salida, llegada):
         camino = []
         actual = llegada
         while actual != salida:
@@ -45,8 +45,8 @@ class Tablero:
         camino.insert(0, salida)
         return camino
     
-    def bellman_ford(self, tablero, Inicio, Final):
-        n = len(tablero)
+    def bellman_ford(self, Inicio, Final):
+        n = len(self.tablero)
         distancia = [INF] * n
         vecino = [-1] * n
         distancia[Inicio] = 0
@@ -54,26 +54,26 @@ class Tablero:
         for _ in range(n - 1):
             for u in range(n):
                 for v in range(n):
-                    if distancia[u] != INF and distancia[u] + tablero[u][v] < distancia[v]:
-                        distancia[v] = distancia[u] + tablero[u][v]
+                    if distancia[u] != INF and distancia[u] + self.tablero[u][v] < distancia[v]:
+                        distancia[v] = distancia[u] + self.tablero[u][v]
                         vecino[v] = u
 
         for u in range(n):
             for v in range(n):
-                if distancia[u] != INF and distancia[u] + tablero[u][v] < distancia[v]:
+                if distancia[u] != INF and distancia[u] + self.tablero[u][v] < distancia[v]:
                     print('Negative-weight cycle is found!!')
                     return
 
         if distancia[Final] != INF:
-            camino = self.get_path(vecino, Inicio, Final)
+            camino = self.getPath(vecino, Inicio, Final)
             peso_total = distancia[Final]
             return camino, peso_total
         else:
             return None
 
-    def Floyd_Warshall(graph, inicio, final):
-        n = len(graph)
-        dist = [list(row) for row in graph]
+    def Floyd_Warshall(self, inicio, final):
+        n = len(self.tablero)
+        dist = [list(row) for row in self.tablero]
 
         for k in range(n):
             for i in range(n):
@@ -90,7 +90,7 @@ class Tablero:
         while actual != final:
             camino.append(actual)
             for vecino in range(n):
-                if vecino != actual and dist[actual][vecino] + graph[vecino][final] == dist[actual][final]:
+                if vecino != actual and dist[actual][vecino] + self.tablero[vecino][final] == dist[actual][final]:
                     actual = vecino
                     break
         camino.append(final)

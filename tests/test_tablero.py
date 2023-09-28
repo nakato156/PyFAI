@@ -28,7 +28,8 @@ def test_bellman_ford():
     inicio, final = 0, 2
     camino = [0, 2]
     peso = 3
-    resultado = Tablero.bellman_ford(bellman_ejemplo, inicio, final)
+    tablero = Tablero(bellman_ejemplo, parse=True)
+    resultado = tablero.bellman_ford(inicio, final)
     caminoBellman, pesoBellman = resultado
     assert caminoBellman == camino
     assert pesoBellman == peso
@@ -37,7 +38,8 @@ def test_floyd_warshall():
     inicio, final = 0, 2
     camino = [0, 2]
     peso = 3
-    resultado = Tablero.Floyd_Warshall(floyd_ejemplo, inicio, final)
+    tablero = Tablero(floyd_ejemplo, parse=True)
+    resultado = tablero.Floyd_Warshall(inicio, final)
     caminoFloyd, pesoFloyd = resultado
     assert caminoFloyd == camino
     assert pesoFloyd == peso 
