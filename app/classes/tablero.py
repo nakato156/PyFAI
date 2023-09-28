@@ -54,13 +54,13 @@ class Tablero:
         for _ in range(n - 1):
             for u in range(n):
                 for v in range(n):
-                    if distancia[u] != INF and distancia[u] + self.tablero[u][v] < distancia[v]:
-                        distancia[v] = distancia[u] + self.tablero[u][v]
+                    if distancia[u] != INF and distancia[u] + self.DISTANCIAS[self.tablero[u][v]] < distancia[v]:
+                        distancia[v] = distancia[u] + self.DISTANCIAS[self.tablero[u][v]]
                         vecino[v] = u
 
         for u in range(n):
             for v in range(n):
-                if distancia[u] != INF and distancia[u] + self.tablero[u][v] < distancia[v]:
+                if distancia[u] != INF and distancia[u] + self.DISTANCIAS[self.tablero[u][v]] < distancia[v]:
                     print('Negative-weight cycle is found!!')
                     return
 
@@ -90,7 +90,7 @@ class Tablero:
         while actual != final:
             camino.append(actual)
             for vecino in range(n):
-                if vecino != actual and dist[actual][vecino] + self.tablero[vecino][final] == dist[actual][final]:
+                if vecino != actual and dist[actual][vecino] + self.DISTANCIAS[self.tablero[vecino][final]] == dist[actual][final]:
                     actual = vecino
                     break
         camino.append(final)
