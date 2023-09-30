@@ -3,7 +3,7 @@ import sys
 INF = sys.maxsize
 lista_tablero = [[3, 2, 3], [3, 3, 4], [1, 3, 4]]
 bellman_ejemplo = [[INF, 2, 3], [3, INF, 4], [1, 3, INF]]
-floyd_ejemplo = [[0, 2, 3], [3, 0, 4], [1, 3, 0]]
+floyd_ejemplo = [[0, 2, 3], [3, 8, 4], [1, 3, 9]]
 def test_tablero():
     vertices = [
         Vertice("00", TipoVertice.NORMAL), Vertice("01", TipoVertice.FINAL), Vertice("02", TipoVertice.NORMAL),
@@ -35,7 +35,7 @@ def test_bellman_ford():
     assert pesoBellman == peso
 
 def test_floyd_warshall():
-    inicio, final = 0, 2
+    inicio, final = 0, 9
     camino = [0, 2]
     peso = 3
     tablero = Tablero(floyd_ejemplo, parse=True)
