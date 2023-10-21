@@ -19,3 +19,9 @@ class Vertice:
     #conversion de string
     def __str__(self):
         return f"{self.nombre}({self.tipo.name})"
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.nombre},{self.tipo.name})"
+    
+    def __hash__(self) -> int:
+        return hash(self.nombre)

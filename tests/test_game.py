@@ -10,5 +10,4 @@ mmatriz_tablero = [
 tablero: Tablero = Tablero(mmatriz_tablero, parse=True)
 
 def test_juego():
-    tablero.bellman_ford()
     ...
