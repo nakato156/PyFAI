@@ -1,4 +1,5 @@
 from app.classes import Tablero, Vertice, TipoVertice
+from pprint import pprint
 INF = float("inf")
 lista_tablero = [[3, 2, 3], [3, 3, 4], [1, 3, 4]]
 
@@ -21,6 +22,8 @@ grafo_no_dirigido = { #Ejemplo de A star con diccionario
     16: {15: 2}
 }
 
+
+
 def test_tablero():
     vertices = [
         Vertice("00", TipoVertice.NORMAL), Vertice("01", TipoVertice.FINAL), Vertice("02", TipoVertice.NORMAL),
@@ -40,6 +43,7 @@ def test_getitem_tablero():
 def test_get_vertice_tablero():
     tablero = Tablero(lista_tablero, parse=True)
     assert tablero.get_vertice("12") == Vertice("12", TipoVertice.OBSTACULO)
+
 
 def test_bellman_ford():
     inicio, final = 1, 16
@@ -61,3 +65,17 @@ def test_A_star():
     caminoA, pesoA = resultado
     assert camino == caminoA
     assert peso == pesoA
+
+def test_parse_tablero():
+    lista_tablero = [
+        [4, 2, 3],
+        [4, 4, 3],
+        [4, 1, 3]
+    ]
+    tablero = Tablero(lista_tablero)
+    tablero.parse()
+    pprint(tablero.grafo)
+    n = len(lista_tablero)
+    cant_con = n * 2 - 2
+    assert len(tablero.grafo) ==  n * cant_con
+
