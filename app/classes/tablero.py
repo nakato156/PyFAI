@@ -1,13 +1,7 @@
 from .vertice import Vertice, TipoVertice
-<<<<<<< HEAD
 import heapq as hq
 INF = float("inf")
 
-=======
-import sys
-
-INF = sys.maxsize
->>>>>>> 8554ceee259e5e5ee1a4c533db5aa3f35317c54b
 class Tablero:
     DISTANCIAS = {
         TipoVertice.INICIO: 0, #Peso
