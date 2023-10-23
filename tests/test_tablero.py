@@ -60,7 +60,7 @@ def test_A_star():
     camino = [1, 2, 5, 8, 9, 12, 15, 16]
     peso = 14
     tablero = Tablero(grafo_no_dirigido, parse=True)
-    h = tablero.manhattan(inicio, final)
+    h = {node: tablero.manhattan(int(node), int(final)) for node in grafo_no_dirigido}
     resultado = tablero.a_star(inicio, final, h)
     caminoA, pesoA = resultado
     assert camino == caminoA
