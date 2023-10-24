@@ -148,12 +148,12 @@ class Tablero:
         node = end
         peso = 0
         while node is not None:
-            camino_minimo.insert(0, node)
+            camino_minimo.append(node)
             if path[node] is not None:
                 peso += G[node][path[node]]
             node = path[node]
 
-        return camino_minimo, peso
+        return camino_minimo[::-1], peso
 
     def manhattan(self, node1, node2):
         return abs(node1 - node2)

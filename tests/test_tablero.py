@@ -3,26 +3,17 @@ from pprint import pprint
 INF = float("inf")
 lista_tablero = [[3, 2, 3], [3, 3, 4], [1, 3, 4]]
 
-grafo_no_dirigido = { #Ejemplo de A star con diccionario 
-    1: {2: 3, 4: 5},
-    2: {1: 3, 3: 2, 5: 1},
-    3: {2: 2, 6: 4},
-    4: {1: 5, 5: 2, 7: 1},
-    5: {2: 1, 4: 2, 6: 3, 8: 1},
-    6: {3: 4, 5: 3, 9: 2},
-    7: {4: 1, 8: 3, 10: 5},
-    8: {5: 1, 7: 3, 9: 2, 11: 4},
-    9: {6: 2, 8: 2, 12: 1},
-    10: {7: 5, 11: 1, 13: 3},
-    11: {8: 4, 10: 1, 12: 2, 14: 3},
-    12: {9: 1, 11: 2, 15: 4},
-    13: {10: 3, 14: 5},
-    14: {11: 3, 13: 5, 15: 1},
-    15: {12: 4, 14: 1, 16: 2},
-    16: {15: 2}
+grafo = {
+    1: { 2: 1, 4: 100 },
+    2: { 1: 100, 3: 1, 5: 100 },
+    4: { 1: 100, 5: 100, 7: 100 },
+    3: { 2: 1, 6: 1 },
+    5: { 2: 1, 4: 100, 6: 1, 8: 1 },
+    6: { 3: 1, 5: 100, 9: 1 },
+    7: { 4: 100, 8: 1 },
+    8: { 5: 100, 7: 100, 9: 1 },
+    9: { 6: 1, 8: 1 }
 }
-
-
 
 def test_tablero():
     vertices = [
@@ -49,9 +40,8 @@ def test_bellman_ford():
     inicio, final = 1, 16
     camino = [1, 2, 5, 8, 9, 12, 15, 16]
     peso = 14
-    tablero = Tablero(grafo_no_dirigido, parse=True)
-    resultado = tablero.bellman_ford(inicio, final)
-    caminoBellman, pesoBellman = resultado
+    tablero = Tablero(grafo, parse=True)
+    caminoBellman, pesoBellman = tablero.bellman_ford(inicio, final)
     assert caminoBellman == camino
     assert pesoBellman == peso
 
@@ -59,10 +49,9 @@ def test_A_star():
     inicio, final = 1, 16
     camino = [1, 2, 5, 8, 9, 12, 15, 16]
     peso = 14
-    tablero = Tablero(grafo_no_dirigido, parse=True)
-    h = {node: tablero.manhattan(int(node), int(final)) for node in grafo_no_dirigido}
-    resultado = tablero.a_star(inicio, final, h)
-    caminoA, pesoA = resultado
+    tablero = Tablero(grafo, parse=True)
+    h = {node: tablero.manhattan(int(node), int(final)) for node in grafo}
+    caminoA, pesoA = tablero.a_star(inicio, final, h)
     assert camino == caminoA
     assert peso == pesoA
 
