@@ -119,7 +119,7 @@ class Tablero:
         n = len(G)
         g = {node: INF for node in G}
         visited = {node: False for node in G}
-        f = {node: INF for node in G}
+        f = g.copy()
         path = {node: None for node in G}
 
         g[start] = 0
