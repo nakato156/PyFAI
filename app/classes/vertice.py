@@ -5,7 +5,6 @@ class TipoVertice(Enum):
     FINAL = 2
     NORMAL = 3
     OBSTACULO = 4
-
     
 class Vertice:
     TIPOS:dict = {item.value:item for item in TipoVertice}
@@ -21,7 +20,7 @@ class Vertice:
         return f"{self.nombre}({self.tipo.name})"
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self.nombre},{self.tipo.name})"
+        return f"{self.__class__.__name__}({repr(self.nombre)},{type(self.tipo).__name__}.{self.tipo.name})"
     
     def __hash__(self) -> int:
         return hash(self.nombre)

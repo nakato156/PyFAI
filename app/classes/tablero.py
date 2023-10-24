@@ -4,10 +4,10 @@ INF = float("inf")
 
 class Tablero:
     DISTANCIAS = {
-        TipoVertice.INICIO: 0, #Peso
+        TipoVertice.INICIO: 1, #Peso
         TipoVertice.NORMAL: 1,
-        TipoVertice.FINAL: 2,
-        TipoVertice.OBSTACULO: -1
+        TipoVertice.FINAL: 0,
+        TipoVertice.OBSTACULO: 100
     }
 
     def __init__(self, tablero:list[list[int]], /, parse:bool=False):
@@ -36,8 +36,6 @@ class Tablero:
                 vertice, vertice_der = Vertice(f"{i}{j}", tipo), Vertice(f"{i}{j+1}", tipo_der)
                 vertice_abj, vertice_der_abj = Vertice(f"{i+1}{j}", tipo_abj), Vertice(f"{i+1}{j+1}", tipo_der_abj)
 
-                if vertice not in self.grafo:
-                    self.grafo[vertice] = {}
 
                 for camino in ((vertice, vertice_der, peso_ida_der), (vertice, vertice_abj, peso_ida_abj), \
                                (vertice_der, vertice, peso_vuelta), (vertice_abj, vertice, peso_vuelta)):
@@ -50,8 +48,8 @@ class Tablero:
             
             if i == self.n_filas - 2:
                 for c in range(self.n_columnas - 1):
-                    vertice, vertice_der = Vertice(f"{i+1}{c}", tipo), Vertice(f"{i+1}{c+1}", tipo_abj)
                     tipo, tipo_der = Vertice.TIPOS[self.tablero[i+1][c]], Vertice.TIPOS[self.tablero[i+1][c+1]]
+                    vertice, vertice_der = Vertice(f"{i+1}{c}", tipo), Vertice(f"{i+1}{c+1}", tipo_der)
 
                     self._agregar_camino(vertice, vertice_der, self.DISTANCIAS[tipo_der])
                     self._agregar_camino(vertice_der, vertice, self.DISTANCIAS[tipo])
@@ -114,14 +112,16 @@ class Tablero:
         else:
             return None
 
-    def a_star(self, start, end, h):
+    def a_star(self, start, end):
         G = self.tablero
         n = len(G)
+
         g = {node: INF for node in G}
         visited = {node: False for node in G}
         f = {node: INF for node in G}
         path = {node: None for node in G}
 
+        h = self.manhattan(start, end)
         g[start] = 0
         f[start] = h[start]
         q = []
@@ -149,9 +149,9 @@ class Tablero:
         peso = 0
         while node is not None:
             camino_minimo.insert(0, node)
-            if path[node] is not None:
-                peso += G[node][path[node]]
-            node = path[node]
+            if padre:=path[node] is not None:
+                peso += G[node][padre]
+            node = padre
 
         return camino_minimo, peso
 
