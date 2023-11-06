@@ -1,5 +1,7 @@
 from .vertice import Vertice, TipoVertice
-import heapq as hq
+import typing as t
+from pprint import pprint
+
 INF = float("inf")
 
 class Tablero:
@@ -82,7 +84,7 @@ class Tablero:
     def bellman_ford(self, start, end):
         # Crear una lista de nodos únicos
         nodes = set()
-        graph = self.tablero
+        graph = self.grafo
         for u, neighbors in graph.items():
             nodes.add(u)
             for v in neighbors:
@@ -92,7 +94,7 @@ class Tablero:
         distancia = {node: INF for node in nodes}
         vecino = {node: -1 for node in nodes}
         distancia[start] = 0
-
+        pprint(distancia)
         for _ in range(n - 1):
             for u, neighbors in graph.items():
                 for v, peso in neighbors.items():
@@ -112,48 +114,66 @@ class Tablero:
         else:
             return None
 
-    def a_star(self, start, end):
-        G = self.tablero
-        n = len(G)
+    def h(self, v1:Vertice, v2:Vertice):
+        x1, y1 = int(v1.nombre[0]), int(v1.nombre[1])
+        x2, y2 = int(v2.nombre[0]), int(v2.nombre[1])
+        return self.manhattan((x1, y1), (x2, y2))
 
-        g = {node: INF for node in G}
-        visited = {node: False for node in G}
-        f = g.copy()
-        path = {node: None for node in G}
+    def a_star(self, start, end) -> t.Tuple[t.Union[list, None], int]:
+        grafo = self.grafo.copy()
 
-        h = self.manhattan(start, end)
-        g[start] = 0
-        f[start] = h[start]
-        q = []
-        hq.heappush(q, (f[start], start))
+        open_set = set([start])
+        closed_set = set([])
 
-        while q:
-            _, n = hq.heappop(q)
-            if not visited[n]:
-                visited[n] = True
-                if n == end:
-                    break
-                for v, w in G[n].items():
-                    if not visited[v] and g[n] + w < g[v]:
-                        path[v] = n
-                        g[v] = g[n] + w
-                        f[v] = g[v] + h[v]
-                        hq.heappush(q, (f[v], v))
+        # distancias contiene las distancias desde el inicio hacia todos los otros nodos
+        distancias = {}
+        distancias[start] = 0
 
-        if path[end] is None:
-            return None, INF  # No se encontró un camino
+        # parents contiene un diccionario de adyacencia de todos los nodos
+        parents = {}
+        parents[start] = start
 
-        # Reconstruir el camino y calcular el peso
-        camino_minimo = []
-        node = end
-        peso = 0
-        while node is not None:
-            camino_minimo.append(node)
-            if path[node] is not None:
-                peso += G[node][path[node]]
-            node = path[node]
+        while open_set:
+            n = None
 
-        return camino_minimo[::-1], peso
+            for v in open_set:
+                if n is None or (distancias[v] + self.h(v, end) < distancias[n] + self.h(n, end)):
+                    n = v
+
+            if n is None: return None, 0
+
+            if n == end:
+                reconst_path = []
+                peso = distancias[n]
+
+                while parents[n] != n:
+                    reconst_path.append(n)
+                    n = parents[n]
+
+                reconst_path.append(start)
+                reconst_path.reverse()
+                return reconst_path, peso
+
+            vecinos:dict = grafo[n]
+            for (m, weight) in vecinos.items():
+                if m not in open_set and m not in closed_set:
+                    open_set.add(m)
+                    parents[m] = n
+                    distancias[m] = distancias[n] + weight
+
+                else:
+                    if distancias[m] > distancias[n] + weight:
+                        distancias[m] = distancias[n] + weight
+                        parents[m] = n
+
+                        if m in closed_set:
+                            closed_set.remove(m)
+                            open_set.add(m)
+
+            open_set.remove(n)
+            closed_set.add(n)
+
+        return None, 0
 
     def manhattan(self, node1, node2):
-        return abs(node1 - node2)
+        return abs(node1[0] - node2[0]) + abs(node1[1] - node2[1])
