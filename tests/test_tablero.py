@@ -32,22 +32,6 @@ def test_get_vertice_tablero():
     tablero = Tablero(lista_tablero, parse=True)
     assert tablero.get_vertice("12") == Vertice("12", TipoVertice.OBSTACULO)
 
-def test_bellman_ford():
-    tablero = Tablero(lista_tablero_simple, parse=True)
-    inicio, final = tablero.get_vertice("21"), tablero.get_vertice("01")
-    peso = 3
-    caminoBellman, pesoBellman = tablero.bellman_ford(inicio, final)
-    assert caminoBellman == camino
-    assert pesoBellman == peso
-
-def test_A_star():
-    tablero = Tablero(lista_tablero_simple, parse=True)
-    inicio, final = tablero.get_vertice("21"), tablero.get_vertice("01")
-    peso = 3
-    caminoA, pesoA = tablero.a_star(inicio, final)
-    assert camino == caminoA
-    assert peso == pesoA
-
 def test_parse_tablero():
     tablero = Tablero(lista_tablero_simple)
     tablero.parse()

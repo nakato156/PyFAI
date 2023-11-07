@@ -1,18 +1,16 @@
+from typing import Union, Literal
 from .tablero import Tablero, Vertice, TipoVertice
-from typing import Literal
+from .Bot import Bot
 
 class Juego:
-    def __init__(self, tablero: list[list[int]]) -> None:
+    def __init__(self, tablero: list[list[int]], algoritmo:Literal["bellman", "a*"]="bel") -> None:
+        self.algoritmo = algoritmo
+        
+        if algoritmo not in ("bellman", "a*"):
+            raise ValueError("Tipo de algoritmo no soportado. Escoja entre 'bell'(bellman-ford) o 'war'(floyd warshall)")
+        
         self.tablero: Tablero = Tablero(tablero, True)
-        n = len(tablero[0])
-        for i in range(n):
-            if fin := tablero[0][(n//2) - i] != TipoVertice.OBSTACULO.value:
-                self.fin = fin
-                break
+        self.bot = Bot(self.tablero.get_vertice("00"), algoritmo=algoritmo)
     
-    def pensar(self, tipo:Literal["bell", "war"]="bel") -> list[Vertice]:
-        if tipo == "bell":
-            self.tablero.bellman_ford()
-        elif tipo == "war":
-            self.tablero.Floyd_Warshall()
-        raise ValueError("Tipo de algoritmo no soportado. Escoja entre 'bell'(bellman-ford) o 'war'(floyd warshall)")
+    def pensar(self, grafo:dict, /) -> Union[list[Vertice], None]:
+        return self.bot.encontrar_ruta(grafo)
