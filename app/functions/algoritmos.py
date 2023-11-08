@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, Union, Any
+from typing import Callable, Tuple, Optional, Any
 
 INF = float("inf")
 
@@ -10,7 +10,7 @@ def getPath(vecino, inicio, final):
     camino.insert(0, inicio)
     return camino
 
-def bellman_ford(graph:dict[Any, dict], start, end) -> Tuple[Union[list, None], int]:
+def bellman_ford(graph:dict[Any, dict], start, end) -> Tuple[Optional[list], int]:
     # Crear una lista de nodos únicos
     nodes = set()
 
@@ -43,7 +43,7 @@ def bellman_ford(graph:dict[Any, dict], start, end) -> Tuple[Union[list, None], 
     else:
         return None, None
 
-def a_star(grafo:dict[Any, dict], start, end, heuristic:Callable[..., int]) -> Tuple[Union[list, None], int]:
+def a_star(grafo:dict[Any, dict], start, end, heuristic:Callable[..., int]) -> Tuple[Optional[list], int]:
     open_set = set([start])
     closed_set = set([])
 

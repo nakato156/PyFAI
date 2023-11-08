@@ -1,9 +1,7 @@
-from typing import Callable, Union, Tuple, TypeAlias
+from typing import Callable, Tuple, Optional
 from functools import wraps
 from .vertice import Vertice
 from app.functions.algoritmos import a_star, bellman_ford
-
-Camino:TypeAlias = Union[list[Vertice], None]
 
 class Bot:
     def __init__(self, posicion:Vertice, **kwargs) -> None:
@@ -19,11 +17,11 @@ class Bot:
         }
 
         if func:= algoritmos.get(self.algoritmo):
-            self.algoritmo:Callable[[Vertice, Vertice], Tuple[Camino, int]] = func
+            self.algoritmo:Callable[[Vertice, Vertice], Tuple[Optional[list[Vertice]], int]] = func
         else:
             raise ValueError("Algoritmo no válido, escoja 'a' para a* o 'bellman' para bellmand ford")
 
-    def cache(func) -> Callable[..., Camino]: 
+    def cache(func) -> Callable[..., Optional[list[Vertice]]]: 
         @wraps(func)
         def wrapper(*args, **kwargs):
             self:Bot = args[0]
@@ -40,7 +38,7 @@ class Bot:
         return wrapper
     
     @cache
-    def encontrar_ruta(self, grafo:dict, /, **kwargs) -> Camino:
+    def encontrar_ruta(self, grafo:dict, /, **kwargs) -> Optional[list[Vertice]]:
         self.grafo = grafo
         fin = kwargs.get("fin", None)
         
@@ -52,11 +50,11 @@ class Bot:
         if path: self.posicion = fin
         return path
     
-    def bellman_ford(self, start, end) -> Tuple[Camino, int]:
+    def bellman_ford(self, start, end) -> Tuple[Optional[list[Vertice]], int]:
         grafo = self.grafo.copy()
         return bellman_ford(grafo, start, end)
 
-    def a_star(self, start, end) -> Tuple[Camino, int]:
+    def a_star(self, start, end) -> Tuple[Optional[list[Vertice]], int]:
         grafo = self.grafo.copy()
         return a_star(grafo, start, end, self.heuristic)
 

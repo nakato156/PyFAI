@@ -1,8 +1,4 @@
 from .vertice import Vertice, TipoVertice
-import typing as t
-from pprint import pprint
-
-INF = float("inf")
 
 class Tablero:
     DISTANCIAS = {

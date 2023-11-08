@@ -1,5 +1,5 @@
-from typing import Union, Literal
-from .tablero import Tablero, Vertice, TipoVertice
+from typing import Optional, Literal
+from .tablero import Tablero, Vertice
 from .Bot import Bot
 
 class Juego:
@@ -12,5 +12,5 @@ class Juego:
         self.tablero: Tablero = Tablero(tablero, True)
         self.bot = Bot(self.tablero.get_vertice("00"), algoritmo=algoritmo)
     
-    def pensar(self, grafo:dict, /) -> Union[list[Vertice], None]:
+    def pensar(self, grafo:dict, /) -> Optional[list[Vertice]]:
         return self.bot.encontrar_ruta(grafo)
