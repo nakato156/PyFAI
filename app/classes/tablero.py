@@ -1,4 +1,5 @@
 from .vertice import Vertice, TipoVertice
+from .Grafo import Grafo
 
 class Tablero:
     DISTANCIAS = {
@@ -13,7 +14,7 @@ class Tablero:
         self.n_filas: int = len(tablero)
         self.n_columnas: int = len(tablero[0])
         self.vertices: list[Vertice] = []
-        self.grafo:dict = {}
+        self.grafo:Grafo = Grafo()
     
         if parse:
             self.parse()
@@ -51,13 +52,14 @@ class Tablero:
 
                     self._agregar_camino(vertice, vertice_der, self.DISTANCIAS[tipo_der])
                     self._agregar_camino(vertice_der, vertice, self.DISTANCIAS[tipo])
+        
+        sumidero:Vertice = Vertice("S", TipoVertice.FINAL)
+        self.grafo.establecer_sumidero(self.vertices[:len(self.tablero)], sumidero)
 
     def _agregar_camino(self, vertice:Vertice, vecino:Vertice, peso:int) -> None:
         if not vertice in self.vertices: self.vertices.append(vertice)
-        if vertice not in self.grafo:
-            self.grafo[vertice] = {}
-        self.grafo[vertice] |= { vecino: peso }
-
+        self.grafo.agregar_arista(vertice, vecino, peso)
+    
     def get_vertice(self, coordenada:str) -> Vertice:
         i, j = coordenada
         lenght = len(self.tablero[0])

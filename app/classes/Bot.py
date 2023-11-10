@@ -13,7 +13,7 @@ class Bot:
 
         algoritmos = {
             "a*": self.a_star,
-            "bellman": bellman_ford
+            "bellman": self.bellman_ford
         }
 
         if func:= algoritmos.get(self.algoritmo):
