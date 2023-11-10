@@ -7,15 +7,15 @@ lista_tablero = [ [3, 2, 3], [3, 3, 4], [1, 3, 4] ]
 lista_tablero_simple = [ [4, 2, 3], [4, 4, 3], [4, 1, 3] ]
 
 camino = [
-    Vertice('21',TipoVertice.INICIO), Vertice('22',TipoVertice.NORMAL), Vertice('12',TipoVertice.NORMAL), 
-    Vertice('02',TipoVertice.NORMAL), Vertice('01',TipoVertice.FINAL)
+    Vertice('2,1',TipoVertice.INICIO), Vertice('2,2',TipoVertice.NORMAL), Vertice('1,2',TipoVertice.NORMAL), 
+    Vertice('0,2',TipoVertice.NORMAL), Vertice('0,1',TipoVertice.FINAL)
 ]
 
 def test_tablero():
     vertices = [
-        Vertice("00", TipoVertice.NORMAL), Vertice("01", TipoVertice.FINAL), Vertice("02", TipoVertice.NORMAL),
-        Vertice("10", TipoVertice.NORMAL), Vertice("11", TipoVertice.NORMAL), Vertice("12", TipoVertice.OBSTACULO),
-        Vertice("20", TipoVertice.INICIO), Vertice("21", TipoVertice.NORMAL), Vertice("22", TipoVertice.OBSTACULO),
+        Vertice("0,0", TipoVertice.NORMAL), Vertice("0,1", TipoVertice.FINAL), Vertice("0,2", TipoVertice.NORMAL),
+        Vertice("1,0", TipoVertice.NORMAL), Vertice("1,1", TipoVertice.NORMAL), Vertice("1,2", TipoVertice.OBSTACULO),
+        Vertice("2,0", TipoVertice.INICIO), Vertice("2,1", TipoVertice.NORMAL), Vertice("2,2", TipoVertice.OBSTACULO),
     ]
     tablero = Tablero(lista_tablero, parse=True)
     assert tablero.tablero == [[3, 2, 3], [3, 3, 4], [1, 3, 4]]
@@ -30,7 +30,7 @@ def test_getitem_tablero():
 
 def test_get_vertice_tablero():
     tablero = Tablero(lista_tablero, parse=True)
-    assert tablero.get_vertice("12") == Vertice("12", TipoVertice.OBSTACULO)
+    assert tablero.get_vertice("1,2") == Vertice("1,2", TipoVertice.OBSTACULO)
 
 def test_parse_tablero():
     tablero = Tablero(lista_tablero_simple)

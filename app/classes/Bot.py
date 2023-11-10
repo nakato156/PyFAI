@@ -59,6 +59,8 @@ class Bot:
         return a_star(grafo, start, end, self.heuristic)
 
     def manhattan(self, v1:Vertice, v2:Vertice) -> int:
-        x1, y1 = int(v1.nombre[0]), int(v1.nombre[1])
-        x2, y2 = int(v2.nombre[0]), int(v2.nombre[1])
+        nombre_v1 = v1.nombre.split(",")
+        nombre_v2 = v2.nombre.split(",")
+        x1, y1 = int(nombre_v1[0]), int(nombre_v1[1])
+        x2, y2 = int(nombre_v2[0]), int(nombre_v2[1])
         return abs(x2 - x1) + abs(y2 - y1)

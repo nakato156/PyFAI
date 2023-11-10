@@ -32,8 +32,8 @@ class Tablero:
 
                 peso_ida_der, peso_ida_abj, peso_vuelta = self.DISTANCIAS[tipo_der], self.DISTANCIAS[tipo_der_abj], self.DISTANCIAS[tipo]
 
-                vertice, vertice_der = Vertice(f"{i}{j}", tipo), Vertice(f"{i}{j+1}", tipo_der)
-                vertice_abj, vertice_der_abj = Vertice(f"{i+1}{j}", tipo_abj), Vertice(f"{i+1}{j+1}", tipo_der_abj)
+                vertice, vertice_der = Vertice(f"{i},{j}", tipo), Vertice(f"{i},{j+1}", tipo_der)
+                vertice_abj, vertice_der_abj = Vertice(f"{i+1},{j}", tipo_abj), Vertice(f"{i+1},{j+1}", tipo_der_abj)
 
 
                 for camino in ((vertice, vertice_der, peso_ida_der), (vertice, vertice_abj, peso_ida_abj), \
@@ -48,7 +48,7 @@ class Tablero:
             if i == self.n_filas - 2:
                 for c in range(self.n_columnas - 1):
                     tipo, tipo_der = Vertice.TIPOS[self.tablero[i+1][c]], Vertice.TIPOS[self.tablero[i+1][c+1]]
-                    vertice, vertice_der = Vertice(f"{i+1}{c}", tipo), Vertice(f"{i+1}{c+1}", tipo_der)
+                    vertice, vertice_der = Vertice(f"{i+1},{c}", tipo), Vertice(f"{i+1},{c+1}", tipo_der)
 
                     self._agregar_camino(vertice, vertice_der, self.DISTANCIAS[tipo_der])
                     self._agregar_camino(vertice_der, vertice, self.DISTANCIAS[tipo])
@@ -61,7 +61,7 @@ class Tablero:
         self.grafo.agregar_arista(vertice, vecino, peso)
     
     def get_vertice(self, coordenada:str) -> Vertice:
-        i, j = coordenada
+        i, j = coordenada.split(",")
         lenght = len(self.tablero[0])
         return self.vertices[int(i) * lenght + int(j)]
 
