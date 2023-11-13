@@ -3,3 +3,5 @@ __pycache__
 env
 grafo
 grafo.png
+itp/client.py
+itp/index.py
