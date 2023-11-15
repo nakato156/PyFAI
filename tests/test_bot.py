@@ -1,5 +1,4 @@
 from app.classes import Bot, Tablero, Vertice, TipoVertice
-from pprint import pprint
 
 lista_tablero = [ [4, 2, 3], [4, 4, 3], [4, 1, 3] ]
 camino = [
@@ -27,7 +26,7 @@ def test_cache_pensar():
     assert path == path3
 
 def test_camino_con_sumidero_bellman():
-    tablero = Tablero(lista_tablero, parse=True)
+    tablero = Tablero(lista_tablero, parse=True, set_sumidero=True)
     
     inicio = tablero.get_vertice("2,1")
     grafo = tablero.grafo
@@ -35,4 +34,4 @@ def test_camino_con_sumidero_bellman():
     bot = Bot(inicio, algoritmo="bellman")
     bot.posicion = inicio
     path_total = bot.encontrar_ruta(grafo, fin=grafo.sumidero)
-    assert camino == path_total[:-1]
+    assert camino[:-1] == path_total[:-1]

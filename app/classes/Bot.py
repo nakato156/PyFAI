@@ -27,7 +27,7 @@ class Bot:
             self:Bot = args[0]
             grafo:dict = args[1]
 
-            key = (func.__name__, frozenset({k: tuple(v.items()) for k, v in grafo.items()}.items()), frozenset(kwargs.items()))
+            key = (frozenset({k: tuple(v.items()) for k, v in grafo.items()}.items()), frozenset(kwargs.items()))
 
             if res:= self._cache.get(key, None):
                 return res
@@ -41,13 +41,14 @@ class Bot:
     def encontrar_ruta(self, grafo:dict, /, **kwargs) -> Optional[list[Vertice]]:
         self.grafo = grafo
         fin = kwargs.get("fin", None)
+        es_sumidero = kwargs.get("es_sumidero", False)
         
         if fin is None:
             raise ValueError("No se ha especificado un destino")
 
         path, _ = self.algoritmo(self.posicion, fin)
         
-        if path: self.posicion = fin
+        if path: self.posicion = path[-2] if es_sumidero else fin
         return path
     
     def bellman_ford(self, start, end) -> Tuple[Optional[list[Vertice]], int]:
