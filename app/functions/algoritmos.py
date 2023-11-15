@@ -59,7 +59,7 @@ def a_star(grafo:dict[Any, dict], start, end, heuristic:Callable[..., int]) -> T
         n = None
 
         for v in open_set:
-            if n is None or (distancias[v] + heuristic(v, end) < distancias[n] + heuristic(n, end)):
+            if n is None or (distancias[v] + heuristic(v) < distancias[n] + heuristic(n, end)):
                 n = v
 
         if n is None: return None, 0

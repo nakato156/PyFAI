@@ -6,6 +6,10 @@ camino = [
     Vertice('2,1',TipoVertice.INICIO), Vertice('2,2',TipoVertice.NORMAL), Vertice('1,2',TipoVertice.NORMAL), 
     Vertice('0,2',TipoVertice.NORMAL), Vertice('0,1',TipoVertice.FINAL)
 ]
+caminoAStar =  [
+    Vertice('2,1', TipoVertice.INICIO), Vertice('2,2', TipoVertice.NORMAL), Vertice('1,2', TipoVertice.NORMAL), Vertice('0,2', 
+    TipoVertice.NORMAL), Vertice('S', TipoVertice.FINAL)
+]
 
 def test_bellman_ford():
     tablero = Tablero(lista_tablero, parse=True)
@@ -15,17 +19,18 @@ def test_bellman_ford():
     assert caminoBellman == camino
     assert pesoBellman == peso
 
-def manhattan(v1:Vertice, v2:Vertice) -> int:
-    nombre_v1 = v1.nombre.split(",")
-    nombre_v2 = v2.nombre.split(",")
-    x1, y1 = int(nombre_v1[0]), int(nombre_v1[1])
-    x2, y2 = int(nombre_v2[0]), int(nombre_v2[1])
-    return abs(x2 - x1) + abs(y2 - y1)
+def heuristic(node):
+    if node.tipo == TipoVertice.FINAL:
+        return 0
+    elif node.tipo == TipoVertice.NORMAL:
+        return 1
+    else:
+        return float('inf')
 
 def test_A_star():
-    tablero = Tablero(lista_tablero, parse=True)
-    inicio, final = tablero.get_vertice("2,1"), tablero.get_vertice("0,1")
+    tablero = Tablero(lista_tablero, parse=True, set_sumidero=True)
+    inicio, final = tablero.get_vertice('2,1'), tablero.grafo.sumidero
     peso = 3
-    caminoA, pesoA = a_star(tablero.grafo, inicio, final, manhattan)
-    assert camino == caminoA
+    caminoA, pesoA = a_star(tablero.grafo, inicio, final, heuristic)
+    assert caminoAStar == caminoA
     assert peso == pesoA
