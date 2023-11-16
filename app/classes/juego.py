@@ -8,37 +8,52 @@ from .tablero import Tablero, Vertice, TipoVertice
 from .Bot import Bot
 
 class Juego:
-    def __init__(self, inicio:Vertice, tablero: list[list[int]]=None, algoritmo:Literal["bellman", "a*"]="bel") -> None:
-        self.algoritmo = algoritmo
+    def __init__(self, inicio:Vertice, tablero: list[list[int]]=None, algoritmo:Literal["bellman", "a*"]="bellman") -> None:
+        self._algoritmo = algoritmo
         self.inicio:Vertice = inicio
         self.tablero: Tablero = Tablero(tablero, True, True) if not tablero is None else None
 
         if algoritmo not in ("bellman", "a*"):
-            raise ValueError("Tipo de algoritmo no soportado. Escoja entre 'bell'(bellman-ford) o 'war'(floyd warshall)")
+            raise ValueError("Tipo de algoritmo no soportado. Escoja entre 'bellman'(bellman-ford) o 'a*'(a estrellita)")
         
         self.bot = Bot(inicio, algoritmo=algoritmo)
     
+    @property
+    def algoritmo(self):
+        return self._algoritmo
+
+    @algoritmo.setter
+    def algoritmo(self, algoritmo:Literal["bellman", "a*"]) -> None:
+        if algoritmo not in ("bellman", "a*"):
+            raise ValueError("Tipo de algoritmo no soportado. Escoja entre 'bellman'(bellman-ford) o 'a*'(a estrellita)")
+        
+        self._algoritmo = algoritmo
+        self.bot.algoritmo = algoritmo
+
+
     def pensar(self, grafo:Grafo, /) -> Optional[list[Vertice]]:
         return self.bot.encontrar_ruta(grafo, fin=grafo.sumidero)
     
-    def train(self, epoch:int, export:bool=True) -> Optional[Bot]:
+    def train(self, epochs:int, export:bool=True) -> Optional[Bot]:
         """
-        Entrena al bot durante el número especificado de épocas.
+        ## Entrena al bot durante el número especificado de épocas.  
 
-        :param epoch:int  
+        :param tablero: Tablero  
+            El tablero con el que se entrenará al bot
+        :param epochs:int  
             Número de épocas de entrenamiento.
         :param export:bool  
             Indica si exportar o no el bot después del entrenamiento.
         :return: Bot | None  
             Retorna una instancia de Bot después del entrenamiento si export es falso sino None.
         """
-            
+
         if self.tablero is None:
             raise ValueError("No se ha definido el tablero")
         
         tablero:Tablero = self.tablero
 
-        while epoch >= 0:
+        while epochs >= 0:
             i = 0
             for sub_tablero in self._segmentar_tablero(tablero, 3):
                 grafo = sub_tablero.grafo
@@ -57,7 +72,7 @@ class Juego:
             shuffle(tablero.tablero)
             tablero = self._avanzar_juego(tablero)
                         
-            epoch -= 1
+            epochs -= 1
 
         if export:
             self._exportar_bot(self.bot)
@@ -76,7 +91,8 @@ class Juego:
 
         return Tablero(nueva_matriz, True, True)
 
-    def _exportar_bot(self, bot:Bot) -> None:
+    @staticmethod
+    def _exportar_bot(bot:Bot) -> None:
         cache = {repr(k): repr(val)  for k,val in bot._cache.items()}
         with open("cache.json", "w") as f:
             dump(cache, f, indent=4)
@@ -92,7 +108,8 @@ class Juego:
         if cache: bot._cache = {eval(k): eval(v) for k,v in cache.items()}
         return bot
 
-    def _segmentar_tablero(self, tablero:Tablero, partes:int) -> list[Tablero]:
+    @staticmethod
+    def _segmentar_tablero(tablero:Tablero, partes:int) -> list[Tablero]:
         filas = tablero.n_filas
         matriz = tablero.tablero[::-1]
 
