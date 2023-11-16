@@ -91,6 +91,7 @@ class Juego:
 
         return Tablero(nueva_matriz, True, True)
     
+    @staticmethod
     def convertir_a_wasd(camino):
         movimientos = []
         n = len(camino)

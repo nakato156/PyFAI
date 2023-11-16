@@ -1,12 +1,12 @@
-from typing import Callable, Tuple, Optional
+from typing import Callable, Tuple, Optional, Union
 from functools import wraps
-from .vertice import Vertice
+from .vertice import Vertice, TipoVertice
 from app.functions.algoritmos import a_star, bellman_ford
 
 class Bot:
     def __init__(self, posicion:Vertice, **kwargs) -> None:
         self.algoritmo = kwargs.get("algoritmo", "a*")
-        self.heuristic:Callable[[Vertice, Vertice], int] = kwargs.get("heuristica", self.manhattan)
+        self.heuristic:Callable[[Vertice, Vertice], int] = kwargs.get("heuristica", self.heuristica_costo_estimado)
         self.grafo:dict = {}
         self._cache:dict = {}
         self.posicion:Vertice = posicion
@@ -59,9 +59,11 @@ class Bot:
         grafo = self.grafo.copy()
         return a_star(grafo, start, end, self.heuristic)
 
-    def manhattan(self, v1:Vertice, v2:Vertice) -> int:
-        nombre_v1 = v1.nombre.split(",")
-        nombre_v2 = v2.nombre.split(",")
-        x1, y1 = int(nombre_v1[0]), int(nombre_v1[1])
-        x2, y2 = int(nombre_v2[0]), int(nombre_v2[1])
-        return abs(x2 - x1) + abs(y2 - y1)
+    @staticmethod
+    def heuristica_costo_estimado(node) -> Union[int, float]:
+        if node.tipo == TipoVertice.FINAL:
+            return 0
+        elif node.tipo == TipoVertice.NORMAL:
+            return 1
+        else:
+            return float('inf')

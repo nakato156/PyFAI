@@ -19,7 +19,7 @@ def test_bellman_ford():
     assert caminoBellman == camino
     assert pesoBellman == peso
 
-def heuristic(node):
+def heuristic(node: Vertice):
     if node.tipo == TipoVertice.FINAL:
         return 0
     elif node.tipo == TipoVertice.NORMAL:
