@@ -90,6 +90,28 @@ class Juego:
                 nueva_matriz[i][j] = matriz[i][(j + 1) % columnas]
 
         return Tablero(nueva_matriz, True, True)
+    
+    def convertir_a_wasd(camino):
+        movimientos = []
+        n = len(camino)
+        for i in range(1, n):
+            actual = camino[i - 1]
+            siguiente = camino[i]
+
+            pos_actual = [int(coord) for coord in actual.nombre.split(",")]
+
+            if siguiente.tipo == TipoVertice.NORMAL:
+                pos_siguiente = [int(coord) for coord in siguiente.nombre.split(",")]
+
+                if pos_actual[0] < pos_siguiente[0]:
+                    movimientos.append('S')
+                elif pos_actual[0] > pos_siguiente[0]:
+                    movimientos.append('W')
+                elif pos_actual[1] < pos_siguiente[1]:
+                    movimientos.append('D')
+                elif pos_actual[1] > pos_siguiente[1]:
+                    movimientos.append('A')
+        return movimientos
 
     @staticmethod
     def _exportar_bot(bot:Bot) -> None:
