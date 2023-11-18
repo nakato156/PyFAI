@@ -1,7 +1,7 @@
 from math import ceil
 from json import dump, load
 from random import shuffle
-from typing import Optional, Literal
+from typing import Optional, Literal, Iterator
 
 from .Grafo import Grafo
 from .tablero import Tablero, Vertice, TipoVertice
@@ -92,26 +92,22 @@ class Juego:
         return Tablero(nueva_matriz, True, True)
     
     @staticmethod
-    def convertir_a_wasd(camino):
+    def convertir_a_wasd(camino) -> list[str]:
         movimientos = []
         n = len(camino)
+        dir_mapping = {(-1, 0): 'W', (1, 0): 'S', (0, -1): 'A', (0, 1): 'D'}
+
         for i in range(1, n):
             actual = camino[i - 1]
             siguiente = camino[i]
 
             pos_actual = [int(coord) for coord in actual.nombre.split(",")]
+            pos_siguiente = [int(coord) for coord in siguiente.nombre.split(",")]
 
-            if siguiente.tipo == TipoVertice.NORMAL:
-                pos_siguiente = [int(coord) for coord in siguiente.nombre.split(",")]
+            #   fila , columna
+            diff_pos = (pos_siguiente[0] - pos_actual[0], pos_siguiente[1] - pos_actual[1])
+            movimientos.append(dir_mapping[diff_pos])
 
-                if pos_actual[0] < pos_siguiente[0]:
-                    movimientos.append('S')
-                elif pos_actual[0] > pos_siguiente[0]:
-                    movimientos.append('W')
-                elif pos_actual[1] < pos_siguiente[1]:
-                    movimientos.append('D')
-                elif pos_actual[1] > pos_siguiente[1]:
-                    movimientos.append('A')
         return movimientos
 
     @staticmethod
@@ -132,7 +128,7 @@ class Juego:
         return bot
 
     @staticmethod
-    def _segmentar_tablero(tablero:Tablero, partes:int) -> list[Tablero]:
+    def _segmentar_tablero(tablero:Tablero, partes:int) -> Iterator[Tablero]:
         filas = tablero.n_filas
         matriz = tablero.tablero[::-1]
 
