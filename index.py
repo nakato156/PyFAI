@@ -36,8 +36,9 @@ def entrenar_con_tablero_random(juego: Juego, size:tuple[int, int], epochs: int,
     juego.tablero = tablero_original
     juego.bot.posicion = pos_inicial
 
-def configurar_socket(juego: Juego, host: str, port: int) -> ITP:
-    itp = ITP(host=host, port=port, max_conections=3)
+def configurar_socket(juego: Juego, host: str, port: int, **kwargs) -> ITP:
+    max_connections = kwargs.get("max_connections") or 3
+    itp = ITP(host=host, port=port, max_conections=max_connections)
     itp.bind()
 
     @itp.on("start")
@@ -50,11 +51,12 @@ def configurar_socket(juego: Juego, host: str, port: int) -> ITP:
     @itp.on("bot")
     def bot(msg: bytes) -> bytes:
         matriz = parse_matriz(msg.decode())
-        tablero = Tablero(matriz, parse=True)
+        tablero = Tablero(matriz, parse=True, set_sumidero=True)
 
         path = juego.pensar(tablero.grafo)
         if path:
-            return str(path).encode()
+            path_wasd = juego.convertir_a_wasd(path)
+            return ','.join(path_wasd).encode()
         return b"0"
     
     return itp
@@ -68,6 +70,7 @@ if __name__ == '__main__':
     socket_group.add_argument("--socket", action="store_true", help="Usar socket para la comunicación")
     socket_group.add_argument("--host", default="0.0.0.0", type=str, help="Dirección IP del host para el modo socket")
     socket_group.add_argument("--port", default=31, type=int, help="Número de puerto para el modo socket")
+    socket_group.add_argument("--max-connections", type=int, help="Número maximo de conexiones para el socket")
 
     bot_group = parser.add_argument_group('Bot')
     bot_group.add_argument("--cache", type=str, help="Especifica el archivo de cache a cargar en el bot")
@@ -90,7 +93,7 @@ if __name__ == '__main__':
 
     if args.socket:
         try:
-            itp = configurar_socket(juego, args.host, args.port)
+            itp = configurar_socket(juego, args.host, args.port, max_connections=args.max_connections)
             itp.run()
         except KeyboardInterrupt:
             print("Saliendo...")
