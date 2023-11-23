@@ -22,7 +22,7 @@ El objetivo principal de este proyecto es diseñar un bot capaz de jugar de mane
 El bot debe abordar los siguientes desafíos clave:
 
 ## <a name="_detecObs"></a>**Detección de obstáculos** 
-Como en la vida cotidiana hay muchas cosas que utilizan la detección de objetos, por ejemplo los coches autónomos. Según (colaboradores de Wikipedia, 2023) La detección de objetos es una tecnología de ordenador relacionada con la visión artificial y el procesamiento de imagen que trata de detectar casos de objetos semánticos de una cierta clase. Para nuestro caso no usaremos una detección de objetos basada en visión artificial. El bot desarrollado debe ser capaz de identificar y rastrear la posición de vehículos, troncos y tortugas en movimiento en tiempo real para evitar colisiones y asegurarse de que la rana llegue a salvo al otro lado de la pantalla. Según los parámetros que recibe del entorno.
+Como en la vida cotidiana hay muchas cosas que utilizan la detección de objetos, por ejemplo los coches autónomos. Según (colaboradores de Wikipedia, 2023) La detección de objetos es una tecnología de ordenador relacionada con la visión artificial y el procesamiento de assets/imagen que trata de detectar casos de objetos semánticos de una cierta clase. Para nuestro caso no usaremos una detección de objetos basada en visión artificial. El bot desarrollado debe ser capaz de identificar y rastrear la posición de vehículos, troncos y tortugas en movimiento en tiempo real para evitar colisiones y asegurarse de que la rana llegue a salvo al otro lado de la pantalla. Según los parámetros que recibe del entorno.
 
 ## <a name="_planifMov"></a>**Planificación de movimiento** 
 El bot debe tomar decisiones inteligentes sobre cuándo y cómo moverse, considerando factores como la velocidad de los obstáculos,  la ubicación de la rana y los posibles lugares de destino en el río. Para esto usaremos el algoritmo Bellman-Ford (Wikipedia contributors, 2023). Transformaremos el juego en un grafo y encontraremos el camino más corto desde donde estamos hasta el final. Esto nos ayudará a planificar el movimiento de nuestra rana hacia la meta.
@@ -42,7 +42,7 @@ Un tamaño aproximado de nuestro tablero será de 30 x 50. Haciendo que, en el m
 Además, consideramos el uso de dos algoritmos diferentes, por lo cual, el espacio de búsqueda se duplica. El tener dos algoritmos, aparte de aumentar nuestro espacio de búsqueda, nos permitirá saber y comparar, con qué algoritmo la rana llega primero.  
 
 
-![](grafo-tablero.png)
+![](assets/grafo-tablero.png)
 
 # <a name="_propuesta"></a>**Propuesta**
 Este proyecto tiene como objetivo desarrollar un bot autónomo para el juego Frogger, un juego de arcade clásico. Frogger desafía a los jugadores a guiar una rana a través de una carretera llena de obstáculos y un río con troncos y tortugas en movimiento. El bot se enfrentará a desafíos clave, incluyendo la detección de obstáculos, planificación de movimiento, evaluación de éxito y una interfaz de usuario.
@@ -163,6 +163,101 @@ Todo el código correspondiente tiene sus propios test, para ello se ha usado la
 
 ## Ejecución del juego
 Para probar el bot se ha decidido por usar los 2 algoritmos diseñados que serían el de bellman ford y a*. Para esto la dinámica del juego se basa en una competición de ambos algoritmos, esto se logra mediante la creación de 2 ranas a la vez en el tablero.
+
+
+# <a name="_resultadosPruebas"></a>**Validación de resultados y pruebas**
+
+Para el final del proyecto, la interfaz gráfica, osea el juego, realizado en el motor de juego Unity, quedó así:
+
+![](assets/imagen.001.jpeg)
+
+Del cual podemos observar las características clásicas del juego Frogger, los carros, el río, los troncos y la clásica rana (frog).
+
+La conexión entre los lenguajes se hizo mediante el protocolo ITP, explicado anteriormente.
+
+![](assets/imagen.002.png)
+
+He aquí una prueba de la conexión exitosa entre el cliente y el servidor. También hicimos pruebas de envío y recepción de datos.
+
+Cuando se envían correctamente los datos:
+
+![](assets/imagen.003.jpeg)
+
+El cliente envía la matriz, el servidor la recibe y trabaja con ello. Posteriormente, ya con la matriz trabajada, retorna el camino encontrado por cada algoritmo utilizado y su posterior traducción al sistema WASD.
+
+En caso los datos no hayan sido enviados correctamente:
+
+![](assets/imagen.004.jpeg)
+
+Saldrá error y no funcionará como debe ser.
+
+He aquí un ejemplo de un día de pruebas y la cantidad de conexiones que se hizo:
+
+![](assets/imagen.005.png)
+
+A su vez un ejemplo del caché que se guardó con la verificación de caminos posibles:
+
+![](assets/imagen.006.png)
+
+Asimismo, implementamos una serie de “tests” en python de las funcionalidades más importantes, para poder verificar que cada una de ellas está funcionando correctamente, y si no, pues sabremos qué funcionalidad falla y así podremos arreglarla de manera más rápida.
+
+Esos son los “test” que creamos, cada uno con una funcionalidad clave.![](assets/imagen.007.png)
+
+## **Test Algoritmo**
+
+Es como su nombre lo dice, probar que los algoritmos utilizados (A\* y Bellman-Ford) funcionen correctamente. Esto se verifica de la siguiente manera:
+
+![](assets/imagen.008.jpeg)
+
+Se define un tablero corto, se define el camino que debería seguir, junto a su respectivo peso y junto a una serie de asserts se verifica su correcto funcionamiento.
+
+## **Test Bot**
+
+Este test tiene la finalidad de verificar que el actuar y pensar del bot, sean idénticas a lo retornado por los algoritmos, es decir, que el camino que tome el bot sea igual al camino retornado por los algoritmos.
+
+![](assets/imagen.009.jpeg)
+
+Se define un tablero junto a su respectivo camino y con una serie de asserts se verifica que sean idénticos.
+
+## **Test parse**
+
+Este test es para verificar el correcto funcionamiento del “parseado”, es decir, el cliente nos mandará una matriz (del juego), el parse convertirá aquella recibida a la estructura usada por el algoritmo, en este caso un diccionario.
+
+![](assets/imagen.010.png)
+
+## **Test vértice**
+
+Este test sirve para verificar el correcto funcionamiento de la clase Vértice. En este test se verifica el correcto “nombramiento” de cada vértice dependiendo su tipo, se verifica el correcto funcionamiento de los vértices en una lista de vértices, se verifica si dos vértices son iguales y la representación de cada uno dependiendo su tipo (INICIO, OBSTÁCULO, NORMAL, FINAL).
+
+![](assets/imagen.011.jpeg)
+
+## **Test Tablero**
+
+Tiene la finalidad de verificar el correcto funcionamiento del tablero. En nuestro proyecto, el tablero viene a ser el juego, la matriz del juego. En este test se verifican varias funcionalidades, desde la correcta comparación de tamaño entre la matriz original y el tablero post parse, hasta verificar si el vértice en posición (x, y) es igual a tal tipo de vértice.
+
+![](assets/imagen.012.jpeg)
+
+Se le pasa una lista de un tablero simple con el cual se trabajará y se verificará las funcionalidades más principales.
+
+## **Test Game**
+
+Este test simulará el funcionamiento del juego, como su nombre lo dice. En el cual, se le pasará una matriz un poco más grande, se definirá el tablero, el bot, su posición inicial, el camino que debería recorrer y con un assert se verifica que el camino que el bot tome sea el correcto.
+
+![](assets/imagen.013.jpeg)
+
+Cuando todos los tests funcionen correctamente y se ejecuten, sale así:
+
+![](assets/imagen.014.jpeg)
+
+En caso haya un error en alguno, saldrá así:
+
+![](assets/imagen.015.jpeg)
+
+En el cual nos especifican en qué test fue el error y en qué falló.
+
+# <a name="_conclusiones"></a>**Conclusiones**
+
+En conclusión, el experimento con el desarrollo de un bot para el juego Frogger utilizando los algoritmos de Bellman-Ford y A\* ha sido un desafío técnico significativo pero exitoso. La implementación de la detección de obstáculos, la planificación de movimiento y la evaluación del éxito han demostrado ser eficaces, proporcionando al bot la capacidad de avanzar por el tablero de manera autónoma. La interfaz de usuario también facilita la observación y control del progreso del bot. La elección de utilizar el protocolo de aplicación ITP y la conexión mediante sockets TCP ha demostrado ser efectiva y confiable. Sin embargo, en futuras implementaciones, se podría explorar la posibilidad de mejorar la eficiencia del bot mediante la optimización de los algoritmos y la incorporación de técnicas avanzadas de detección de objetos mediante visión artificial.
 
 
 # <a name="_biblio"></a>**Bibliografía** 
