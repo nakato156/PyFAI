@@ -41,21 +41,30 @@ def configurar_socket(juego: Juego, host: str, port: int, **kwargs) -> ITP:
     itp = ITP(host=host, port=port, max_conections=max_connections)
     itp.bind()
 
+    bots:dict[str, Juego] = {}
+
     @itp.on("start")
     def start(msg: bytes) -> bytes:
         nonlocal juego
-        cords, algoritmo = msg.decode().split(";")
-        juego.inicio = Vertice(cords, Vertice.TIPOS[1])
-        juego.algoritmo = algoritmo
+        bot_id, algoritmo = msg.decode().split(";")
+        nuevo_juego = Juego(inicio=None, algoritmo=algoritmo)
+        nuevo_juego.bot.cache = juego.bot.cache
+        bots[bot_id] = nuevo_juego
+        print(f"configurado {bot_id}")
 
     @itp.on("bot")
     def bot(msg: bytes) -> bytes:
-        matriz = parse_matriz(msg.decode())
+        bot_id, matriz_str = msg.decode().split(";")
+        matriz = parse_matriz(matriz_str)
         tablero = Tablero(matriz, parse=True, set_sumidero=True)
 
-        path = juego.pensar(tablero.grafo)
+        juego_actual = bots[bot_id]
+        if not juego.bot.posicion:
+            juego_actual.bot.posicion = next((v for v in tablero.vertices if v.tipo == v.TIPOS[1]), None)
+
+        path = juego_actual.pensar(tablero.grafo)
         if path:
-            path_wasd = juego.convertir_a_wasd(path)
+            path_wasd = juego.convertir_a_wasd(path[:-1])
             return ','.join(path_wasd).encode()
         return b"0"
     
