@@ -269,3 +269,5 @@ En conclusión, el experimento con el desarrollo de un bot para el juego Frogger
 
 - Nakato. (s. f.). GitHub - nakato156/ITP. GitHub. https://github.com/nakato156/ITP/blob/main/SPECIFICATION.md  
 
+# Link del video
+https://drive.google.com/drive/folders/1exz8ZvNe1DTkPik_JYtfchvY9TmWr9pV?usp=sharing 
